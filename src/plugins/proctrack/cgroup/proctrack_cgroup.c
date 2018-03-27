@@ -46,6 +46,7 @@
 
 #include "slurm/slurm.h"
 #include "slurm/slurm_errno.h"
+#include "src/common/list.h"
 #include "src/common/log.h"
 #include "src/common/xcgroup_read_config.h"
 #include "src/common/xstring.h"

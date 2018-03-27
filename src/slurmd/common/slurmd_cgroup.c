@@ -47,6 +47,7 @@
 
 #include "slurm/slurm_errno.h"
 #include "slurm/slurm.h"
+#include "src/common/list.h"
 #include "src/common/bitstring.h"
 #include "src/common/slurm_resource_info.h"
 #include "src/common/xcgroup_read_config.h"
