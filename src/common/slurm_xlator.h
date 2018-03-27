@@ -177,32 +177,6 @@
 #define gres_device_major	slurm_gres_device_major
 #define destroy_gres_device	slurm_destroy_gres_device
 
-/* list.[ch] functions */
-#define	list_create		slurm_list_create
-#define	list_destroy		slurm_list_destroy
-#define	list_is_empty		slurm_list_is_empty
-#define	list_count		slurm_list_count
-#define	list_append		slurm_list_append
-#define	list_prepend		slurm_list_prepend
-#define	list_find_first		slurm_list_find_first
-#define	list_delete_all		slurm_list_delete_all
-#define	list_for_each		slurm_list_for_each
-#define	list_sort		slurm_list_sort
-#define	list_push		slurm_list_push
-#define	list_pop		slurm_list_pop
-#define	list_peek		slurm_list_peek
-#define	list_enqueue		slurm_list_enqueue
-#define	list_dequeue		slurm_list_dequeue
-#define	list_iterator_create	slurm_list_iterator_create
-#define	list_iterator_reset	slurm_list_iterator_reset
-#define	list_iterator_destroy	slurm_list_iterator_destroy
-#define	list_next		slurm_list_next
-#define	list_insert		slurm_list_insert
-#define	list_find		slurm_list_find
-#define	list_remove		slurm_list_remove
-#define	list_delete_item	slurm_list_delete_item
-#define	list_install_fork_handlers slurm_list_install_fork_handlers
-
 /* log.[ch] functions */
 #define	log_init		slurm_log_init
 #define	log_reinit		slurm_log_reinit
