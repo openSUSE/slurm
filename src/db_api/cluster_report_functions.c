@@ -92,7 +92,7 @@ static void _process_ua(List user_list, slurmdb_assoc_rec_t *assoc)
 	/* get the amount of time this assoc used
 	   during the time we are looking at */
 	slurmdb_transfer_acct_list_2_tres(assoc->accounting_list,
-					  &slurmdb_report_user->tres_list);
+					  (List *)&slurmdb_report_user->tres_list);
 }
 
 static void _process_au(List assoc_list, slurmdb_assoc_rec_t *assoc)
@@ -110,7 +110,7 @@ static void _process_au(List assoc_list, slurmdb_assoc_rec_t *assoc)
 	/* get the amount of time this assoc used
 	   during the time we are looking at */
 	slurmdb_transfer_acct_list_2_tres(assoc->accounting_list,
-					  &slurmdb_report_assoc->tres_list);
+					  (List *)&slurmdb_report_assoc->tres_list);
 }
 
 static void _process_uw(List user_list, slurmdb_wckey_rec_t *wckey)
@@ -138,7 +138,7 @@ static void _process_uw(List user_list, slurmdb_wckey_rec_t *wckey)
 	/* get the amount of time this wckey used
 	   during the time we are looking at */
 	slurmdb_transfer_acct_list_2_tres(wckey->accounting_list,
-					  &slurmdb_report_user->tres_list);
+					  (List *)&slurmdb_report_user->tres_list);
 }
 
 static void _process_wu(List assoc_list, slurmdb_wckey_rec_t *wckey)
@@ -173,9 +173,9 @@ static void _process_wu(List assoc_list, slurmdb_wckey_rec_t *wckey)
 	/* get the amount of time this wckey used
 	   during the time we are looking at */
 	slurmdb_transfer_acct_list_2_tres(wckey->accounting_list,
-					  &slurmdb_report_assoc->tres_list);
+					  (List *)&slurmdb_report_assoc->tres_list);
 	slurmdb_transfer_acct_list_2_tres(wckey->accounting_list,
-					  &parent_assoc->tres_list);
+					  (List *)&parent_assoc->tres_list);
 }
 
 static void _process_assoc_type(
@@ -365,7 +365,7 @@ end_it:
 }
 
 
-extern List slurmdb_report_cluster_account_by_user(void *db_conn,
+extern SlurmList slurmdb_report_cluster_account_by_user(void *db_conn,
 	slurmdb_assoc_cond_t *assoc_cond)
 {
 	return _process_util_by_report(db_conn,
@@ -373,7 +373,7 @@ extern List slurmdb_report_cluster_account_by_user(void *db_conn,
 				       assoc_cond, CLUSTER_REPORT_AU);
 }
 
-extern List slurmdb_report_cluster_user_by_account(void *db_conn,
+extern SlurmList slurmdb_report_cluster_user_by_account(void *db_conn,
 	slurmdb_assoc_cond_t *assoc_cond)
 {
 	return _process_util_by_report(db_conn,
@@ -381,7 +381,7 @@ extern List slurmdb_report_cluster_user_by_account(void *db_conn,
 				       assoc_cond, CLUSTER_REPORT_UA);
 }
 
-extern List slurmdb_report_cluster_wckey_by_user(void *db_conn,
+extern SlurmList slurmdb_report_cluster_wckey_by_user(void *db_conn,
 	slurmdb_wckey_cond_t *wckey_cond)
 {
 	return _process_util_by_report(db_conn,
@@ -389,7 +389,7 @@ extern List slurmdb_report_cluster_wckey_by_user(void *db_conn,
 				       wckey_cond, CLUSTER_REPORT_WU);
 }
 
-extern List slurmdb_report_cluster_user_by_wckey(void *db_conn,
+extern SlurmList slurmdb_report_cluster_user_by_wckey(void *db_conn,
 	slurmdb_wckey_cond_t *wckey_cond)
 {
 	return _process_util_by_report(db_conn,

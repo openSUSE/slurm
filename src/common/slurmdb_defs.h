@@ -39,6 +39,7 @@
 #define _SLURMDB_DEFS_H
 
 #include "slurm/slurmdb.h"
+#include "src/common/list.h"
 
 /* Defined purge macros */
 #define SLURMDB_PURGE_GET_UNITS(_X) \
@@ -136,9 +137,9 @@ extern slurmdb_admin_level_t str_2_slurmdb_admin_level(char *level);
 /* The next three functions have pointers to assoc_list so do not
  * destroy assoc_list before using the list returned from this function.
  */
-extern List slurmdb_get_hierarchical_sorted_assoc_list(List assoc_list,
-						       bool use_lft);
-extern List slurmdb_get_acct_hierarchical_rec_list(List assoc_list);
+extern SlurmList slurmdb_get_hierarchical_sorted_assoc_list(SlurmList assoc_list,
+						            bool use_lft);
+extern SlurmList slurmdb_get_acct_hierarchical_rec_list(SlurmList assoc_list);
 extern List slurmdb_get_acct_hierarchical_rec_list_no_lft(List assoc_list);
 
 /* This reorders the list into a alphabetical hierarchy.
@@ -147,7 +148,7 @@ extern List slurmdb_get_acct_hierarchical_rec_list_no_lft(List assoc_list);
 extern void slurmdb_sort_hierarchical_assoc_list(List assoc_list, bool use_lft);
 
 /* IN/OUT: tree_list a list of slurmdb_print_tree_t's */
-extern char *slurmdb_tree_name_get(char *name, char *parent, List tree_list);
+extern char *slurmdb_tree_name_get(char *name, char *parent, SlurmList tree_list);
 
 extern int set_qos_bitstr_from_string(bitstr_t *valid_qos, char *names);
 extern int set_qos_bitstr_from_list(bitstr_t *valid_qos, List qos_list);

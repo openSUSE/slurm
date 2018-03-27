@@ -452,9 +452,10 @@ static void _pack_alloc_test(List resp, uint32_t *node_cnt, uint32_t *job_id)
  *      with no allocation granted)
  * NOTE: free the response using list_destroy()
  */
-List slurm_allocate_pack_job_blocking(List job_req_list, time_t timeout,
+SlurmList slurm_allocate_pack_job_blocking(SlurmList job_req_sl, time_t timeout,
 				      void(*pending_callback)(uint32_t job_id))
 {
+	List job_req_list = (List)job_req_sl;
 	int rc;
 	slurm_msg_t req_msg;
 	slurm_msg_t resp_msg;
@@ -668,8 +669,9 @@ int slurm_job_will_run(job_desc_msg_t *req)
  *		allocation request
  * RET 0 on success, otherwise return -1 and set errno to indicate the error
  */
-extern int slurm_pack_job_will_run(List job_req_list)
+extern int slurm_pack_job_will_run(SlurmList job_req_sl)
 {
+	List job_req_list = (List)job_req_sl;
 	job_desc_msg_t *req;
 	will_run_response_msg_t *will_run_resp;
 	char buf[64], local_hostname[64] = "", *sep = "";
@@ -908,8 +910,9 @@ extern int slurm_allocation_lookup(uint32_t jobid,
  * NOTE: returns information an individual job as well
  * NOTE: free the response using list_destroy()
  */
-extern int slurm_pack_job_lookup(uint32_t jobid, List *info)
+extern int slurm_pack_job_lookup(uint32_t jobid, SlurmList *info_sl)
 {
+	List *info = (List *)info_sl;
 	job_alloc_info_msg_t req = {0};
 	slurm_msg_t req_msg;
 	slurm_msg_t resp_msg;
@@ -1383,7 +1386,7 @@ static void _wait_for_allocation_response(uint32_t job_id,
 					resp) >= 0)
 				return;
 		} else if (msg_type == RESPONSE_JOB_PACK_ALLOCATION) {
-			if (slurm_pack_job_lookup(job_id, (List *) resp) >= 0)
+			if (slurm_pack_job_lookup(job_id, (SlurmList *) resp) >= 0)
 				return;
 		} else {
 			error("%s: Invalid msg_type (%u)", __func__, msg_type);

@@ -49,9 +49,10 @@
  * IN:  slurmdb_user_cond_t *user_cond
  * RET: SLURM_SUCCESS on success SLURM_ERROR else
  */
-extern int slurmdb_coord_add(void *db_conn, List acct_list,
+extern int slurmdb_coord_add(void *db_conn, SlurmList acct_sl,
 			     slurmdb_user_cond_t *user_cond)
 {
+	List acct_list = (List)acct_sl;
 	if (db_api_uid == -1)
 		db_api_uid = getuid();
 
@@ -65,9 +66,10 @@ extern int slurmdb_coord_add(void *db_conn, List acct_list,
  * IN: slurmdb_user_cond_t *user_cond
  * RET: List containing (char *'s) else NULL on error
  */
-extern List slurmdb_coord_remove(void *db_conn, List acct_list,
+extern SlurmList slurmdb_coord_remove(void *db_conn, SlurmList acct_sl,
 				 slurmdb_user_cond_t *user_cond)
 {
+	List acct_list = (List)acct_sl;
 	if (db_api_uid == -1)
 		db_api_uid = getuid();
 

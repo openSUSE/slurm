@@ -480,13 +480,13 @@ no_objects:
 			cluster_group->count++;
 
 			slurmdb_transfer_tres_time(
-				&job_group->tres_list, job->tres_alloc_str,
+				(List *)&job_group->tres_list, job->tres_alloc_str,
 				job->elapsed);
 			slurmdb_transfer_tres_time(
-				&acct_group->tres_list, job->tres_alloc_str,
+				(List *)&acct_group->tres_list, job->tres_alloc_str,
 				job->elapsed);
 			slurmdb_transfer_tres_time(
-				&cluster_group->tres_list, job->tres_alloc_str,
+				(List *)&cluster_group->tres_list, job->tres_alloc_str,
 				job->elapsed);
 		}
 		list_iterator_destroy(local_itr);
@@ -529,24 +529,27 @@ end_it:
 	return cluster_list;
 }
 
-extern List slurmdb_report_job_sizes_grouped_by_top_account(void *db_conn,
-	slurmdb_job_cond_t *job_cond, List grouping_list, bool flat_view)
+extern SlurmList slurmdb_report_job_sizes_grouped_by_top_account(void *db_conn,
+	slurmdb_job_cond_t *job_cond, SlurmList grouping_sl, bool flat_view)
 {
+	List grouping_list = (List)grouping_sl;
 	return _process_grouped_report(db_conn, job_cond, grouping_list,
 				       flat_view, 0, 0);
 }
 
-extern List slurmdb_report_job_sizes_grouped_by_wckey(void *db_conn,
-	slurmdb_job_cond_t *job_cond, List grouping_list)
+extern SlurmList slurmdb_report_job_sizes_grouped_by_wckey(void *db_conn,
+	slurmdb_job_cond_t *job_cond, SlurmList grouping_sl)
 {
+	List grouping_list = (List)grouping_sl;
 	return _process_grouped_report(db_conn, job_cond, grouping_list,
 				       0, 1, 0);
 }
 
-extern List slurmdb_report_job_sizes_grouped_by_top_account_then_wckey(
+extern SlurmList slurmdb_report_job_sizes_grouped_by_top_account_then_wckey(
 	void *db_conn, slurmdb_job_cond_t *job_cond,
-	List grouping_list, bool flat_view)
+	SlurmList grouping_sl, bool flat_view)
 {
+	List grouping_list = (List)grouping_sl;
 	return _process_grouped_report(
 		db_conn, job_cond, grouping_list, flat_view, 0, 1);
 }

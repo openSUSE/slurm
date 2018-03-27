@@ -115,9 +115,10 @@ extern int slurm_submit_batch_job(job_desc_msg_t *req,
  * OUT resp - response to request
  * RET 0 on success, otherwise return -1 and set errno to indicate the error
  */
-extern int slurm_submit_batch_pack_job(List job_req_list,
+extern int slurm_submit_batch_pack_job(SlurmList job_req_sl,
 				       submit_response_msg_t **resp)
 {
+	List job_req_list = (List)job_req_sl;
 	int rc;
 	job_desc_msg_t *req;
 	slurm_msg_t req_msg;

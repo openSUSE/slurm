@@ -39,6 +39,7 @@
 #define _NODE_FEATURES_H
 
 #include "slurm/slurm.h"
+#include "src/common/list.h"
 #include "src/common/bitstring.h"
 
 /* Perform plugin initialization: read configuration files, etc. */

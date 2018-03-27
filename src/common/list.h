@@ -46,8 +46,6 @@
  *  Data Types  *
  ****************/
 
-#ifndef   __list_datatypes_defined
-#  define __list_datatypes_defined
 typedef struct xlist * List;
 
 /* FreeBSD does not define __compar_fn_t
@@ -92,7 +90,6 @@ typedef int (*ListForF) (void *x, void *arg);
  *  Function prototype for operating on each item in a list.
  *  Returns less-than-zero on error.
  */
-#endif
 
 
 /*******************************

@@ -44,7 +44,7 @@
 #include "src/common/slurm_accounting_storage.h"
 #include "src/common/xstring.h"
 
-extern List slurmdb_report_user_top_usage(void *db_conn,
+extern SlurmList slurmdb_report_user_top_usage(void *db_conn,
 					  slurmdb_user_cond_t *user_cond,
 					  bool group_accounts)
 {
@@ -249,7 +249,7 @@ extern List slurmdb_report_user_top_usage(void *db_conn,
 					    xstrdup(assoc->acct));
 			slurmdb_transfer_acct_list_2_tres(
 				assoc->accounting_list,
-				&slurmdb_report_user->tres_list);
+				(List *)&slurmdb_report_user->tres_list);
 		}
 		list_iterator_destroy(itr2);
 	}

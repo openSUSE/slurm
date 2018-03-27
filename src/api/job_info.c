@@ -2241,9 +2241,11 @@ static int _load_fed_job_prio(slurm_msg_t *req_msg,
  */
 extern int
 slurm_load_job_prio(priority_factors_response_msg_t **factors_resp,
-		    List job_id_list, char *partitions, List uid_list,
-		    uint16_t show_flags)
+		    SlurmList job_id_sl, char *partitions,
+		    SlurmList uid_sl, uint16_t show_flags)
 {
+	List job_id_list = (List)job_id_sl;
+	List uid_list = (List)uid_sl;
 	slurm_msg_t req_msg;
 	priority_factors_request_msg_t factors_req;
 	char *cluster_name = NULL;

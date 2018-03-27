@@ -1349,7 +1349,7 @@ extern void slurmdb_destroy_report_cluster_grouping(void *object)
 	}
 }
 
-extern List slurmdb_get_info_cluster(char *cluster_names)
+extern SlurmList slurmdb_get_info_cluster(char *cluster_names)
 {
 	slurmdb_cluster_rec_t *cluster_rec = NULL;
 	slurmdb_cluster_cond_t cluster_cond;
@@ -1948,9 +1948,10 @@ extern slurmdb_admin_level_t str_2_slurmdb_admin_level(char *level)
 
 /* This reorders the list into a alphabetical hierarchy returned in a
  * separate list.  The orginal list is not affected */
-extern List slurmdb_get_hierarchical_sorted_assoc_list(
-	List assoc_list, bool use_lft)
+extern SlurmList slurmdb_get_hierarchical_sorted_assoc_list(
+	SlurmList assoc_sl, bool use_lft)
 {
+	List assoc_list = (List)assoc_sl;
 	List slurmdb_hierarchical_rec_list;
 	List ret_list = list_create(NULL);
 
@@ -2026,8 +2027,9 @@ extern List slurmdb_get_acct_hierarchical_rec_list_no_lft(List assoc_list)
 	return arch_rec_list;
 }
 
-extern List slurmdb_get_acct_hierarchical_rec_list(List assoc_list)
+extern SlurmList slurmdb_get_acct_hierarchical_rec_list(SlurmList assoc_sl)
 {
+	List assoc_list = (List)assoc_sl;
 	slurmdb_hierarchical_rec_t *par_arch_rec = NULL;
 	slurmdb_hierarchical_rec_t *last_acct_parent = NULL;
 	slurmdb_hierarchical_rec_t *last_parent = NULL;
@@ -2116,8 +2118,9 @@ extern List slurmdb_get_acct_hierarchical_rec_list(List assoc_list)
 }
 
 /* IN/OUT: tree_list a list of slurmdb_print_tree_t's */
-extern char *slurmdb_tree_name_get(char *name, char *parent, List tree_list)
+extern char *slurmdb_tree_name_get(char *name, char *parent, SlurmList tree_sl)
 {
+	List tree_list = (List)tree_sl;
 	ListIterator itr = NULL;
 	slurmdb_print_tree_t *slurmdb_print_tree = NULL;
 	slurmdb_print_tree_t *par_slurmdb_print_tree = NULL;
@@ -2956,7 +2959,7 @@ extern slurmdb_report_cluster_rec_t *slurmdb_cluster_rec_2_report(
 	itr = list_iterator_create(cluster->accounting_list);
 	while ((accting = list_next(itr)))
 		slurmdb_add_cluster_accounting_to_tres_list(
-			accting, &slurmdb_report_cluster->tres_list);
+			accting, (List *)&slurmdb_report_cluster->tres_list);
 	list_iterator_destroy(itr);
 
 	itr = list_iterator_create(slurmdb_report_cluster->tres_list);
@@ -3145,9 +3148,10 @@ static local_cluster_rec_t * _pack_job_will_run(List job_req_list)
  * working_cluster_rec to pack the job_desc's jobinfo. See previous commit for
  * an example of how to thread this.
  */
-extern int slurmdb_get_first_pack_cluster(List job_req_list,
+extern int slurmdb_get_first_pack_cluster(SlurmList job_req_sl,
 	char *cluster_names, slurmdb_cluster_rec_t **cluster_rec)
 {
+	List job_req_list = (List)job_req_sl;
 	job_desc_msg_t *req;
 	local_cluster_rec_t *local_cluster = NULL;
 	int rc = SLURM_SUCCESS;
