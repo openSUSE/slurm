@@ -41,11 +41,17 @@
 #define _HAVE_DAEMONIZE_H
 
 /*
- * Fork process into background and inherit new session.
+ * Start fork process into background and inherit new session.
  *
- * Returns -1 on error.
  */
 extern int xdaemon(void);
+extern int xdaemon_init(void);
+
+/*
+ * Finish daemonization by ending grandparen
+ */
+
+extern void xdaemon_finish(int fd);
 
 /* Write pid into file pidfile if uid is not 0 change the owner of the
  * pidfile to that user.

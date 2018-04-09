@@ -53,31 +53,75 @@
 #include "src/common/xassert.h"
 
 /*
- * Double-fork and go into background.
+ * Start daemonization with double-fork and go into background.
  * Caller is responsible for umasks
  */
-int xdaemon(void)
+int xdaemon_init(void)
 {
-	int devnull;
-
+	int fds [2];
+	int n;
+	signed char priority;
+	char ebuf [1024];
+	/*
+	 * Create pipe in order to get signal from grand child to terminate
+	 */
+	if (pipe (fds) < 0) {
+		error("Failed to create daemon pipe");
+	}
 	switch (fork()) {
 		case  0 : break;        /* child */
 		case -1 : return -1;
-		default : _exit(0);     /* exit parent */
+		default : {
+			if (close (fds[1]) < 0) {
+				error("Failed to close write-pipe in parent process");
+			}
+
+			/*
+			 * get signal of grandchild to exit
+			 */
+			if ((n = read (fds[0], &priority, sizeof (priority))) < 0) {
+			    error("Failed to read status from grandchild process");
+			}
+			if ((n > 0) && (priority >= 0)) {
+			    if ((n = read (fds[0], ebuf, sizeof (ebuf))) < 0) {
+				error("Failed to read err msg from grandchild process");
+			    }
+			    if ((n > 0) && (ebuf[0] != '\0')) {
+				error("Error with forking and steeing up pipe: %s", ebuf);
+			    }
+			    return -1;
+			}
+			_exit(0);
+		}
 	}
 
 	if (setsid() < 0)
 		return -1;
-
+	if (close (fds[0]) < 0) {
+		error("Failed to close read-pipe in child process");
+	}
 	switch (fork()) {
 		case 0 : break;         /* child */
 		case -1: return -1;
 		default: _exit(0);      /* exit parent */
 	}
+	return (fds[1]);
+}
 
+/*
+ * finish daemonization after pidfile was written
+ */
+
+
+void xdaemon_finish(int fd)
+{
 	/*
-	 * dup stdin, stdout, and stderr onto /dev/null
+	 * PID file was written, now do dup stdin, stdout, 
+	 * and stderr onto /dev/null and close pipe
+	 * so that systemd realizes we are daemonized
 	 */
+	int devnull;
+
 	devnull = open("/dev/null", O_RDWR);
 	if (devnull < 0)
 		error("Unable to open /dev/null: %m");
@@ -89,8 +133,21 @@ int xdaemon(void)
 		error("Unable to dup /dev/null onto stderr: %m");
 	if (close(devnull) < 0)
 		error("Unable to close /dev/null: %m");
+	if ((fd >= 0) && (close (fd) < 0)) {
+		error( "Failed to close write-pipe in grandchild process");
+	}
+}
 
-	return 0;
+/* 
+ * keep depercated api
+ */
+
+int xdaemon(void)
+{
+	int ret_val;
+	ret_val= xdaemon_init();
+	xdaemon_finish(ret_val);
+	return ret_val;
 }
 
 /*
