@@ -215,7 +215,7 @@ static void      _wait_for_all_threads(int secs);
 int
 main (int argc, char **argv)
 {
-	int i, pidfd;
+	int i, pidfd, pipefd;
 	int blocked_signals[] = {SIGPIPE, 0};
 	int cc;
 	char *oom_value;
@@ -300,7 +300,8 @@ main (int argc, char **argv)
 	 * Become a daemon if desired.
 	 */
 	if (conf->daemonize) {
-		if (xdaemon())
+		pipefd = xdaemon_init();
+		if (pipefd == -1)
 			error("Couldn't daemonize slurmd: %m");
 	}
 	test_core_limit();
@@ -356,6 +357,9 @@ main (int argc, char **argv)
 
 	conf->pid = getpid();
 	pidfd = create_pidfile(conf->pidfile, 0);
+	if (conf->daemonize) {
+		xdaemon_finish(pipefd);
+	}
 
 	rfc2822_timestamp(time_stamp, sizeof(time_stamp));
 	info("%s started on %s", slurm_prog_name, time_stamp);
