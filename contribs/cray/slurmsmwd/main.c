@@ -538,6 +538,7 @@ int main(int argc, char **argv)
 {
 	pthread_t processing_thread, signal_handler_thread;
 	pthread_attr_t thread_attr;
+	int pipefd;
 
 	_parse_commandline(argc, argv);
 
@@ -546,11 +547,15 @@ int main(int argc, char **argv)
 	slurmsmwd_print_config();
 
 	if (!foreground) {
-		if (xdaemon())
+		pipefd = xdaemon_init();
+		if (pipefd == -1)
 			error("daemon(): %m");
 	}
 	if (create_pidfile("/var/run/slurmsmwd.pid", 0) < 0)
 		fatal("Unable to create pidfile /var/run/slurmswmd.pid");
+	if (!foreground) {
+		xdaemon_finish(pipefd);
+	}
 
 	slurm_mutex_init(&down_node_lock);
 
