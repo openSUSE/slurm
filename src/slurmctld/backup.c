@@ -65,6 +65,7 @@
 #include "src/slurmctld/read_config.h"
 #include "src/slurmctld/slurmctld.h"
 #include "src/slurmctld/trigger_mgr.h"
+#include "src/slurmctld/agent.h"
 
 #define _DEBUG		0
 #define SHUTDOWN_WAIT	2	/* Time to wait for primary server shutdown */
@@ -258,6 +259,9 @@ void run_backup(slurm_trigger_callbacks_t *callbacks)
 		error("Unable to recover slurm state");
 		abort();
 	}
+	/* Reinit agent in case it has been terminated - agent_init()
+	   will check itself */
+	agent_init();
 	slurmctld_config.shutdown_time = (time_t) 0;
 	unlock_slurmctld(config_write_lock);
 	select_g_select_nodeinfo_set_all();
