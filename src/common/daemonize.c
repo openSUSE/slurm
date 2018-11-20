@@ -138,18 +138,6 @@ void xdaemon_finish(int fd)
 	}
 }
 
-/* 
- * keep depercated api
- */
-
-int xdaemon(void)
-{
-	int ret_val;
-	ret_val= xdaemon_init();
-	xdaemon_finish(ret_val);
-	return ret_val;
-}
-
 /*
  * Read and return pid stored in pidfile.
  * Returns 0 if file doesn't exist or pid cannot be read.

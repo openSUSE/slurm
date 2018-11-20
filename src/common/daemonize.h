@@ -44,7 +44,6 @@
  * Start fork process into background and inherit new session.
  *
  */
-extern int xdaemon(void);
 extern int xdaemon_init(void);
 
 /*
